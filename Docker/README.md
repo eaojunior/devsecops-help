@@ -102,6 +102,36 @@ docker restart {container-id}
 docker rm {docker-name}
 ```
 
+### Adicionando volumes
+
+```
+docker volume create {volume-name}
+```
+
+### Removendo volumes
+
+```
+docker volume rm {volume-name}
+```
+
+### Inspecionando um volume
+
+```
+docker volume inspect {volume-name}
+```
+
+### Montar um volume bind
+
+```
+docker container run -d --mount type=bind,src={path-source},dst={path-destination},{permissions} {image}
+```
+
+### Montar um volume comun
+
+```
+docker container run -d --mount type=volume,src={path-source},dst={path-destination},{permissions} {image}
+```
+
 ### Removendo todos os volumes
 
 ```
