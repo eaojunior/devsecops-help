@@ -301,3 +301,78 @@ docker run -dt --name redmineapp \
 -p 8080:3000 \
 redmine
 ```
+
+# Docker Swarm
+
+### Iniciar um cluster
+
+```
+docker swarm init
+```
+
+### Listar nodes do cluster
+
+```
+docker node ls
+```
+
+### Exibir informação do token de manager
+
+```
+docker swarm join-token manager
+```
+
+### Exibir informação do token de worker
+
+```
+docker swarm join-token worker
+```
+
+### Informações do node
+
+```
+docker node inspect LINUXtips-02
+```
+
+### Promover node a manager
+
+```
+docker node promote LINUXtips-03
+```
+
+### Tornar node manager em worker
+
+```
+docker node demote LINUXtips-03
+```
+
+### Abandonar o cluser
+
+```
+docker swarm leave
+docker swarm leave --force
+```
+
+### Remover um node do cluster
+
+```
+docker node rm LINUXtips-03
+```
+
+### Criar um serviço no cluster
+
+```
+docker service create --name webserver --replicas 5 -p 8080:80  nginx
+```
+
+### Criar uma interface de rede
+
+```
+docker network create -d overlay giropops
+```
+
+### Atualizar informações do serviço
+
+```
+docker service update <OPCOES> <Nome_Service> 
+```
