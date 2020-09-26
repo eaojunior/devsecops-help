@@ -54,3 +54,27 @@ ip_vs
 # sudo echo 'source <(kubectl completion bash)' >>~/.bashrc
 # sudo kubectl completion bash >/etc/bash_completion.d/kubectl
 ```
+
+### Limitando Recursos
+
+```
+# vim limitando-recursos.yaml:
+
+apiVersion: v1
+kind: LimitRange
+metadata:
+  name: limitando-recursos
+spec:
+  limits:
+  - default:
+      cpu: 1
+      memory: 100Mi
+    defaultRequest:
+      cpu: 0.5
+      memory: 80Mi
+    type: Container
+```
+
+```
+# kubectl create -f limitando-recursos.yaml -n primeiro-namespace
+```
