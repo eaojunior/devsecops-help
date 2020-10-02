@@ -58,7 +58,7 @@ ip_vs
 ### Limitando Recursos
 
 ```
-# vim limitando-recursos.yaml:
+# vim limitando-recursos.yaml
 
 apiVersion: v1
 kind: LimitRange
@@ -77,4 +77,186 @@ spec:
 
 ```
 # kubectl create -f limitando-recursos.yaml -n primeiro-namespace
+```
+
+### Trabalhando com Taints
+#### Define restrinções aos nós do cluster, também utilizado para por nó em estado de manutenção
+
+```
+# kubectl describe nodes | grep -i taints
+# kubectl taint node k8s-slave-01 key1=value1:NoSchedule
+# kubectl taint node k8s-slave-01 key1=value1:NoSchedule-
+# kubectd taint node k8s-slave-03 key1=value1:NoExecute
+# kubectd taint node k8s-slave-03 key1=value1:NoExecute-
+```
+
+### Trabalhando com Services
+#### Recurso responsável por expor portas e acessos aos pods
+
+##### ClusterID - Acesso apenas no cluster
+```
+# vim meu-primeiro-service-cluster-ip.yaml
+
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: eaojunior
+  name: eaojunior
+  namespace: default
+spec:
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 80
+  selector:
+    app: eaojunior
+  sessionAffinity: ClientIP
+  type: ClusterIP
+```
+
+##### NodePort - Acesso externo através de roteamento de porta
+
+```
+# vim meu-primeiro-service-node-port.yaml
+
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: eaojunior
+  name: eaojunior
+  namespace: default
+spec:
+  externalTrafficPolicy: Cluster
+  ports:
+  - nodePort: 32222
+    port: 80
+    protocol: TCP
+    targetPort: 80
+  selector:
+    app: eaojunior
+  sessionAffinity: None
+  type: NodePort
+```
+
+##### LoadBalancer - Acesso externo através de recurso de LB com ip externo
+
+```
+# vim meu-primeiro-service-load-balancer.yaml
+
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: eaojunior
+  name: eaojunior
+  namespace: default
+spec:
+  externalTrafficPolicy: Cluster
+  ports:
+  - nodePort: 32222
+    port: 80
+    protocol: TCP
+    targetPort: 80
+  selector:
+    app: eaojunior
+  sessionAffinity: None
+  type: LoadBalancer
+```
+
+### Trabalhando com Deployments
+
+```
+# vim meu-primeiro-deployment.yaml
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    run: nginx
+    app: giropops
+  name: primeiro-deployment
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      run: nginx
+  template:
+    metadata:
+      labels:
+        run: nginx
+        dc: UK
+    spec:
+      containers:
+      - image: nginx
+        imagePullPolicy: Always
+        name: nginx2
+        ports:
+        - containerPort: 80
+          protocol: TCP
+        resources: {}
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+```
+
+### Trabalhando com ReplicaSet 
+#### Não aconselhavel criar replicaset sem controller Deployment
+
+```
+# vim meu-primeito-replica-set.yaml
+
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: replica-set-primeiro
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      run: nginx
+  template:
+    metadata:
+      labels:
+        run: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.7.9
+        ports:
+        - containerPort: 80
+```
+
+### Trabalhando com DaemonSet
+#### Semelhante ao ReplicaSet porém garante que irá ter ao menos um pod rodando em cada nó do cluster
+
+```
+# vim meu-primeiro-daemon-set.yaml
+
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: meu-primeiro-daemon-set
+spec:
+  selector:
+    matchLabels:
+      system: Strigus
+  template:
+    metadata:
+      labels:
+        system: Strigus
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.7.9
+        ports:
+        - containerPort: 80
+  updateStrategy:
+    type: RollingUpdate
 ```
