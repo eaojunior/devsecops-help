@@ -2,7 +2,7 @@
 
 > Artefatos de auxilio.
 
-Aqui vamos ter acesso a todo artefato que poderá ser utilizado para configurar todas as ferramentas e serviços necessários.
+Aqui teremos acesso a todo artefato que poderá ser utilizado para configurar as ferramentas e serviços necessários para iniciar, deployar e monitorar ambientes escaláveis em nuvem.
 
 ## Histórico de lançamentos
     
