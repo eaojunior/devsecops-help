@@ -260,3 +260,116 @@ spec:
   updateStrategy:
     type: RollingUpdate
 ```
+
+### Trabalhando com EmptyVolume
+
+```
+# vim pod-empty.yaml
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: busybox
+  namespace: default
+spec:
+  containers:
+  - image: busybox
+    name: busy
+    command:
+    - sleep
+    - "3600"
+    volumeMounts:
+    - mountPath: /giropops
+      name: giropops-dir
+  volumes:
+  - name: giropops-dir
+    emptyDir: {}
+```
+
+### Trabalhando com PersistentVolume
+
+```
+# vim primeiro-pv.yaml
+
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: primeiro-pv
+spec:
+  capacity:
+    storage: 1Gi
+  accessModes:
+  - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  nfs:
+    path: /opt/dados
+    server: k8s-master
+    readOnly: false
+```
+
+### Trabalhando com PersistentVolumeClaim
+
+```
+# vim primeiro-pvc.yaml
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: primeiro-pvc
+spec:
+  accessModes:
+  - ReadWriteMany
+  resources:
+    requests:
+      storage: 800Mi
+```
+
+### Atachando PVC no Deployment
+
+```
+# vim nfs-pv-deployment.yaml
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    run: nginx
+  name: nginx
+  namespace: default
+spec:
+  progressDeadlineSeconds: 600
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      run: nginx
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        run: nginx
+    spec:
+      containers:
+      - image: nginx
+        imagePullPolicy: Always
+        name: nginx
+        volumeMounts:
+        - name: nfs-pv
+          mountPath: /giropops
+        resources: {}
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+      volumes:
+      - name: nfs-pv
+        persistentVolumeClaim:
+          claimName: primeiro-pvc
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+```
