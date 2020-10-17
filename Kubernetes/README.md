@@ -262,6 +262,7 @@ spec:
 ```
 
 ### Trabalhando com EmptyVolume
+#### É um tipo de volume não persistente, sempre que o pod é finalizado o mesmo é apagado
 
 ```
 # vim pod-empty.yaml
