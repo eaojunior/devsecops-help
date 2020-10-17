@@ -3,10 +3,6 @@
 
 Aqui vamos ter acesso a todo artefato que poderá ser utilizado para configurar os serviços da AWS, como EC2, S3, RDS, DynamoDB, CloundFront, Route53 e etc.
 
-[Mais informações](http://wiki.agilize.com.br)
-
-![](https://emoji.slack-edge.com/T02DZKXPX/agilize/1c4fd71a8c53cc1c.png)
-
 ## Histórico de lançamentos
 
 * 30/04/2020
@@ -16,7 +12,7 @@ Aqui vamos ter acesso a todo artefato que poderá ser utilizado para configurar 
 
 ## Meta
 
-Erivaldo Alves de Oleira Júnior – [@ErivaldoJr](https://github.com/eaojunior) – erivaldo.junior@agilize.com.br
+Erivaldo Alves de Oleira Júnior – [@ErivaldoJr](https://github.com/eaojunior) – eaojunior1@gmail.com
 
 Distribuído sob a licença MIT License. Veja `LICENSE` para mais informações.
 
