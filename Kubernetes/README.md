@@ -374,3 +374,28 @@ spec:
       securityContext: {}
       terminationGracePeriodSeconds: 30
 ```
+
+### Trabalhanco com CronJobs
+
+```
+# vim primeiro-cronjob.yaml
+
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: girpops-cron
+spec:
+  schedule: "*/1 * * * *"
+  jobTemplate:
+    spec: 
+      template:
+        spec:
+          containers:
+          - name: giropos-cron
+            image: busybox
+            args:
+            - /bin/sh
+            - -c
+            - date; echo Bem Vindo ao Descomplicando Kubernetes - LinuxTips VAIIII ;sleep 40
+          restartPolicy: OnFailure
+```
