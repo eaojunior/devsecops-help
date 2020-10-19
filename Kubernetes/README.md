@@ -399,3 +399,143 @@ spec:
             - date; echo Bem Vindo ao Descomplicando Kubernetes - LinuxTips VAIIII ;sleep 40
           restartPolicy: OnFailure
 ```
+
+### Trabalhando com Secrets
+
+```
+# echo -n "giropops strigus girus" > secret.txt
+# kubectl create secret generic my-secret --from-file=secret.txt
+# echo {token} | base64 --decode
+```
+
+```
+# vim pod-secret.yaml
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: test-secret
+  namespace: default
+spec:
+  containers:
+  - image: busybox
+    name: busy
+    command:
+    - sleep
+    - "3600"
+    volumeMounts:
+    - mountPath: /tmp/giropops
+      name: my-volume-secret
+  volumes:
+  - name: my-volume-secret
+    secret:
+      secretName: my-secret
+```
+
+```
+# kubectl create secret generic my-literal-secret --from-literal user=linuxtips --from-literal password=catota
+```
+
+```
+# vim pod-secret-env.yaml
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: test-secret-env
+  namespace: default
+spec:
+  containers:
+  - image: busybox
+    name: busy
+    command:
+    - sleep
+    - "3600"
+    env:
+    - name: MEU_USERNAME
+      valueFrom:
+        secretKeyRef:
+          name: my-literal-secret
+          key: user
+    - name: MEU_PASSWORD
+      valueFrom:
+        secretKeyRef:
+          name: my-literal-secret
+          key: password
+```
+
+### Trabalhando com ConfigMaps
+
+```
+# mkdir fruits
+# echo amarela > fruits/banana
+# echo kiwi > predileta
+# kubectl create configmap colors-fruits --from-literal uva=roxa --from-file=predileta --from-file=fruits/
+```
+
+```
+# vim pod-configmap.yaml
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: test-configmap
+  namespace: default
+spec:
+  containers:
+  - image: busybox
+    name: busy
+    command:
+    - sleep
+    - "3600"
+    env:
+    - name: frutas
+      valueFrom:
+        configMapKeyRef:
+          name: colors-fruits
+          key: predileta
+```
+
+```
+# vim pod-configmap-envfrom.yaml
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: test-configmap
+  namespace: default
+spec:
+  containers:
+  - image: busybox
+    name: busy
+    command:
+    - sleep
+    - "3600"
+    envFrom:
+    - configMapRef:
+      name: colors-fruits
+```
+
+```
+# vim pod-configmap-volume.yaml
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: test-configmap
+  namespace: default
+spec:
+  containers:
+  - image: busybox
+    name: busy
+    command:
+    - sleep
+    - "3600"
+    volumeMounts:
+    - name: meu-configmap-volume
+      mountPath: /etc/fruits
+  volumes:
+  - name: meu-configmap-volume
+    configMap:
+      name: colors-fruits
+```
