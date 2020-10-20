@@ -606,3 +606,19 @@ subjects:
   name: admin-user
   namespace: kube-system
 ```
+
+### Trabalhando com o Helm
+
+#### Instalação
+
+```
+# curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
+``` 
+
+#### Exemplos
+
+```
+# helm install prometheus --namespace=monitoring --version=11.4.0 --set alertmanager.persistentVolume.enabled=false,server.persistentVolume.enabled=false stable/prometheus
+#
+# helm install grafana --namespace=monitoring --version=5.1.4 --set adminUser=admin,adminPassword=admin,service.type=NodePort stable/grafana
+```
