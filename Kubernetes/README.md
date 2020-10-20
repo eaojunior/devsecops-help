@@ -539,3 +539,39 @@ spec:
     configMap:
       name: colors-fruits
 ```
+
+### Trabalhando com InitContainer
+#### É um container que será executado antes de iniciar o container principal, caso seja necessário executar tarefas para iniciar o container principal, como popular uma base de dados, rodar migrações e etc.
+
+```
+# vim nginx-initcontainer.yaml
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: init-demo
+spec:
+  containers:
+  - name: nginx
+    image: nginx
+    ports:
+    - containerPort: 80
+    volumeMounts:
+    - name: workdir
+      mountPath: /usr/share/nginx/html
+  initContainers:
+  - name: install
+    image: busybox
+    command:
+    - wget
+    - "-O"
+    - "/work-dir/index.html"
+    - http://kubernetes.io
+    volumeMounts:
+    - name: workdir
+      mountPath: /work-dir
+  dnsPolicy: Default
+  volumes:
+  - name: workdir
+    emptyDir: {}
+```
