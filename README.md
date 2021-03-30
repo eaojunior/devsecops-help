@@ -6,6 +6,9 @@ Aqui teremos acesso a todo artefato que poderá ser utilizado para configurar as
 
 ## Histórico de lançamentos
     
+* 30/03/2021
+	* Incluído pasta de artefatos para Vault.
+	
 * 30/04/2020
 	* Incluído pasta de artefatos para AWS.
 	* Incluído pasta de ajuda para Docker.
